@@ -17,6 +17,27 @@ from pathlib import Path
 from configurations import Configuration, values
 
 class Dev(Configuration):
+    LOGGING = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "verbose": {
+                    "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+                    "style": "{",
+                },
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "stream": "ext://sys.stdout",
+                    "formatter": "verbose",
+                },
+            },
+            "root": {
+                "handlers": ["console"],
+                "level": "DEBUG",
+            },
+        }
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,7 +49,6 @@ class Dev(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = values.BooleanValue(True)
 
-    ALLOWED_HOSTS = []
     # other settings truncated for brevity
 
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +64,8 @@ class Dev(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
-    ALLOWED_HOSTS = values.ListValue("localhost","0.0.0.0",".codio.io")
+    # ALLOWED_HOSTS = values.ListValue("localhost","0.0.0.0",".codio.io")
+    ALLOWED_HOSTS = {"*"}
     X_FRAME_OPTIONS = 'ALLOW-FROM ' + os.environ.get('CODIO_HOSTNAME') + '-8000.codio.io'
     CSRF_COOKIE_SAMESITE = None
     CSRF_TRUSTED_ORIGINS = ['https://' + os.environ.get('CODIO_HOSTNAME') + '-8000.codio.io']
